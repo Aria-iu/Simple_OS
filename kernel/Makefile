@@ -27,6 +27,7 @@ OBJCOPY := rust-objcopy --binary-architecture=riscv64
 # Disassembly
 DISASM ?= -x
 
+
 build: env switch-check $(KERNEL_BIN)
 
 env:
@@ -47,9 +48,19 @@ $(KERNEL_BIN): kernel
 
 kernel:
 	@echo Platform: $(BOARD)
-	@cp src/link_$(BOARD)_32.ld src/linker.ld
+	@cp src/link_$(BOARD).ld src/linker.ld
 	@cargo build $(MODE_ARG) --features "$(BOARD)"
 	@rm src/linker.ld
+
+gdb_server: build
+	@qemu-system-riscv64 -machine virt -nographic -bios $(BOOTLOADER) -device loader,file=$(KERNEL_BIN),addr=$(KERNEL_ENTRY_PA) -s -S
+
+qemu_no_debug:
+	@qemu-system-riscv64 -machine virt -nographic -bios $(BOOTLOADER) -device loader,file=$(KERNEL_BIN),addr=$(KERNEL_ENTRY_PA)
+
+
+gdbclient:
+	@riscv64-unknown-elf-gdb -ex 'file $(KERNEL_ELF)' -ex 'set arch riscv:rv64' -ex 'target remote localhost:1234'
 
 clean:
 	@cargo clean
