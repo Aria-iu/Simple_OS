@@ -73,7 +73,7 @@ impl QEMUExit for RISCV64 {
         self.exit(EXIT_FAILURE);
     }
 }
-
+// reset code address
 const VIRT_TEST: u64 = 0x100000;
 
 pub const QEMU_EXIT_HANDLE: RISCV64 = RISCV64::new(VIRT_TEST);

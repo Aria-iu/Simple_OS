@@ -12,8 +12,6 @@ mod sbi;
 #[path = "../board/qemu.rs"]
 mod board;
 
-
-
 global_asm!(include_str!("entry.S"));
 
 
@@ -42,7 +40,7 @@ fn simpl_os_main() -> ! {
         fn boot_stack_top(); // stack top
     }
     clear_bss();
-    println!("Simpl_OS");
+    welcome();
     println!(".text [{:#x}, {:#x})", stext as usize, etext as usize);
     println!(".rodata [{:#x}, {:#x})", srodata as usize, erodata as usize);
     println!(".data [{:#x}, {:#x})", sdata as usize, edata as usize);
@@ -60,4 +58,24 @@ fn simpl_os_main() -> ! {
 
     #[cfg(feature = "board_k210")]
     panic!("Unreachable in rust_main!");
+
+    panic!("Should Shutdown!");
+}
+
+fn welcome(){
+    println!("                                                                                ,----..                 ");     
+    println!("\x1b[31m  .--.--.                      ____              ,--,                          /   /   \\   .--.--.      \x1b[0m");     
+    println!(" /  /    '.   ,--,           ,'  , `.,-.----.  ,--.'|                         /   .     : /  /    '.    ");     
+    println!("\x1b[31m|  :  /`. / ,--.'|        ,-+-,.' _ |\\    /  \\ |  | :                        .   /   ;.  \\  :  /`. /    \x1b[0m");     
+    println!(";  |  |--`  |  |,      ,-+-. ;   , |||   :    |:  : '                       .   ;   /  ` ;  |  |--`     ");     
+    println!("|  :  ;_    `--'_     ,--.'|'   |  |||   | .\\ :|  ' |      ,---.            ;   |  ; \\ ; |  :  ;_       ");     
+    println!("\x1b[31m \\  \\    `. ,' ,'|   |   |  ,', |  |,.   : |: |'  | |     /     \\           |   :  | ; | '\\  \\    `.    \x1b[0m");     
+    println!("  `----.   \\'  | |   |   | /  | |--' |   |  \\ :|  | :    /    /  |          .   |  ' ' ' : `----.   \\   ");     
+    println!("\x1b[31m  __ \\  \\  ||  | :   |   : |  | ,    |   : .  |'  : |__ .    ' / |          '   ;  \\; /  | __ \\  \\  |   \x1b[0m");     
+    println!(" /  /`--'  /'  : |__ |   : |  |/     :     |`-'|  | '.'|'   ;   /|        ___\\   \\  ',  / /  /`--'  /   ");     
+    println!("\x1b[31m'--'.     / |  | '.'||   | |`-'      :   : :   ;  :    ;'   |  / |     .'  .`|;   :    / '--'.     /    \x1b[0m");     
+    println!("  `--'---'  ;  :    ;|   ;/          |   | :   |  ,   / |   :    |  .'  .'   : \\   \\ .'    `--'---'     ");     
+    println!("            |  ,   / '---'           `---'.|    ---`-'   \\   \\  /,---, '   .'   `---`                   ");     
+    println!("             ---`-'                    `---`              `----' ;   |  .'                              ");     
+    println!("                                                                 `---'                                  "); 
 }
