@@ -70,5 +70,5 @@ impl AppManager{
 pub fn init(){}
 
 pub fn print_app_info(){}
-
+// 现阶段在app执行结束或者产生fault时进行调用。
 pub fn run_next_app()->!{}
