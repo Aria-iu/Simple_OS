@@ -1,3 +1,6 @@
+/// 在trap时实现用户栈和内核栈的转换（trap.S）
+/// 
+
 use crate::sync::UPSafeCell;
 use crate::trap::TrapContext;
 use core::arch::asm;
@@ -58,7 +61,12 @@ impl AppManager{
             println!("[kernel] app_{}[{:x},{:x}]",i,self.app_start[i],self.app_start[i+1]);
         }
     }
-    fn load_app(&self, app_id: usize){
+    pub unsafe fn load_app(&self, app_id: usize){
+        if app_id > MAX_APPS {
+            panic!("Apps Complete!");
+        }
+        println!("[Kernel] load app_{}",app_id);
+        // 加载app的数据，到APP_BASE_ADDRESS
         
     }
 }
@@ -67,8 +75,15 @@ impl AppManager{
 
 //interfaces
 
-pub fn init(){}
+pub fn init(){
+    print_app_info();
+}
 
-pub fn print_app_info(){}
+pub fn print_app_info(){
+    // lazy_static 的 APPMANAGER 执行输出
+}
+
 // 现阶段在app执行结束或者产生fault时进行调用。
-pub fn run_next_app()->!{}
+pub fn run_next_app()->!{
+    // 加载下一个app，通过设置上下文调用__restore，返回用户态执行
+}
