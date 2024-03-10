@@ -1,9 +1,7 @@
-/// 在trap时实现用户栈和内核栈的转换（trap.S）
-/// 
-///
+// 在trap时实现用户栈和内核栈的转换（trap.S）
+
 use crate::sync::UPSafeCell;
 use crate::trap::TrapContext;
-use core::arch::asm;
 use lazy_static::*; 
 
 const MAX_APPS: usize = 16;
@@ -15,28 +13,28 @@ const APP_BASE_ADDRESS: usize = 0x80400000;
 const APP_SIZE_LIMIT: usize = 0x20000;
 
 #[repr(align(4096))]
-struct USER_STACK{
+struct UserStack{
     stack: [u8;USER_STACK_SIZE],
 }
 
 #[repr(align(4096))]
-struct KERNEL_STACK{
+struct KernelStack{
     stack: [u8;KERNEL_STACK_SIZE],
 }
 
-static KERNEL_STACK: KERNEL_STACK = KERNEL_STACK {
+static KERNEL_STACK: KernelStack = KernelStack {
     stack: [0; KERNEL_STACK_SIZE],
 };
-static USER_STACK: USER_STACK = USER_STACK {
+static USER_STACK: UserStack = UserStack {
     stack: [0; USER_STACK_SIZE],
 };
 
-impl USER_STACK{
+impl UserStack{
     fn get_sp(&self) -> usize{
         self.stack.as_ptr() as usize + USER_STACK_SIZE
     }
 }
-impl KERNEL_STACK{
+impl KernelStack{
     fn get_sp(&self) -> usize{
         self.stack.as_ptr() as usize + KERNEL_STACK_SIZE
     }

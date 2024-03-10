@@ -11,6 +11,8 @@ pub mod trap;
 pub mod batch;
 mod sync;
 pub mod syscall;
+pub mod timer;
+pub mod config;
 
 #[macro_use]
 extern crate lazy_static;
