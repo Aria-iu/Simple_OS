@@ -9,7 +9,7 @@ _num_app:
     .quad app_3_start
     .quad app_4_start
     .quad app_4_end
-    .gloabl _app_names
+    .global _app_names
 _app_names:
     .string "00hello_world"
     .string "01store_fault"

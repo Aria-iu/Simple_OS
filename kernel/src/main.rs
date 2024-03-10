@@ -7,12 +7,20 @@ mod console;
 use core::arch::global_asm;
 mod lang_items;
 mod sbi;
+pub mod trap;
+pub mod batch;
+mod sync;
+pub mod syscall;
+
+#[macro_use]
+extern crate lazy_static;
 
 #[cfg(feature = "qemu")]
 #[path = "../board/qemu.rs"]
 mod board;
 
 global_asm!(include_str!("entry.S"));
+global_asm!(include_str!("link_app.S"));
 
 
 fn clear_bss(){
@@ -49,6 +57,10 @@ fn simpl_os_main() -> ! {
         boot_stack as usize, boot_stack_top as usize
     );
     println!(".bss [{:#x}, {:#x})", sbss as usize, ebss as usize);
+    println!("begin run some Apps here!");
+    trap::init();
+    batch::init();
+    batch::run_next_app();
 
     #[cfg(feature = "qemu")]
     use crate::board::QEMUExit;

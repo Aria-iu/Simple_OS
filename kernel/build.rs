@@ -36,7 +36,7 @@ _num_app:
         writeln!(f, r#"    .quad app_{}_start"#, i)?;
     }
     writeln!(f, r#"    .quad app_{}_end"#, apps.len() - 1)?;
-    writeln!(f, r#"    .gloabl _app_names
+    writeln!(f, r#"    .global _app_names
 _app_names:"#)?;
     for i in 0..apps.len(){
         writeln!(f, r#"    .string "{}""#, apps[i])?;

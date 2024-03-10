@@ -1,0 +1,1 @@
+/home/zyc/rust_projects/Simple_Core/apps/target/riscv64gc-unknown-none-elf/release/03priv_inst: /home/zyc/rust_projects/Simple_Core/apps/src/bin/03priv_inst.rs /home/zyc/rust_projects/Simple_Core/apps/src/console.rs /home/zyc/rust_projects/Simple_Core/apps/src/lang_items.rs /home/zyc/rust_projects/Simple_Core/apps/src/lib.rs /home/zyc/rust_projects/Simple_Core/apps/src/syscall.rs
