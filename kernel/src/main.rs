@@ -8,7 +8,7 @@ use core::arch::global_asm;
 mod lang_items;
 mod sbi;
 pub mod trap;
-pub mod batch;
+// pub mod batch;
 mod sync;
 pub mod syscall;
 pub mod timer;
@@ -61,8 +61,7 @@ fn simpl_os_main() -> ! {
     println!(".bss [{:#x}, {:#x})", sbss as usize, ebss as usize);
     println!("begin run some Apps here!");
     trap::init();
-    batch::init();
-    batch::run_next_app();
+    
 
     #[cfg(feature = "qemu")]
     use crate::board::QEMUExit;
