@@ -1,8 +1,29 @@
 use core::arch::asm;
 
-const SYSCALL_WRITE: usize = 64;
-const SYSCALL_EXIT: usize = 93;
-const SYSCALL_GET_TIME: usize = 169;
+pub const SYSCALL_OPENAT: usize = 56;
+pub const SYSCALL_CLOSE: usize = 57;
+pub const SYSCALL_READ: usize = 63;
+pub const SYSCALL_WRITE: usize = 64;
+pub const SYSCALL_UNLINKAT: usize = 35;
+pub const SYSCALL_LINKAT: usize = 37;
+pub const SYSCALL_FSTAT: usize = 80;
+pub const SYSCALL_EXIT: usize = 93;
+pub const SYSCALL_YIELD: usize = 124;
+pub const SYSCALL_GET_TIME: usize = 169;
+pub const SYSCALL_GETPID: usize = 172;
+pub const SYSCALL_FORK: usize = 220;
+pub const SYSCALL_EXEC: usize = 221;
+pub const SYSCALL_WAITPID: usize = 260;
+pub const SYSCALL_SET_PRIORITY: usize = 140;
+pub const SYSCALL_MUNMAP: usize = 215;
+pub const SYSCALL_MMAP: usize = 222;
+pub const SYSCALL_SPAWN: usize = 400;
+pub const SYSCALL_MAIL_READ: usize = 401;
+pub const SYSCALL_MAIL_WRITE: usize = 402;
+pub const SYSCALL_DUP: usize = 24;
+pub const SYSCALL_PIPE: usize = 59;
+
+
 
 #[repr(C)]
 #[derive(Debug)]
@@ -36,3 +57,21 @@ pub fn sys_exit(exit_code: i32) -> isize {
 pub fn sys_get_time(ts: *mut TimeVal, _tz: usize) -> isize{
     syscall(SYSCALL_GET_TIME,[ts as usize,_tz as usize,0])
 }
+
+pub fn syscall6(id: usize, args: [usize; 6]) -> isize {
+    let mut ret: isize;
+    unsafe {
+        asm!(
+            "ecall",
+            inlateout("x10") args[0] => ret,
+            in("x11") args[1],
+            in("x12") args[2],
+            in("x13") args[3],
+            in("x14") args[4],
+            in("x15") args[5],
+            in("x17") id
+        );
+    }
+    ret
+}
+

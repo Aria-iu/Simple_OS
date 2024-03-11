@@ -13,7 +13,7 @@ const APP_BASE_ADDRESS: usize = 0x80400000;
 const APP_SIZE_LIMIT: usize = 0x20000;
 
 #[repr(align(4096))]
-struct UserStack{
+pub struct UserStack{
     stack: [u8;USER_STACK_SIZE],
 }
 
@@ -25,12 +25,12 @@ struct KernelStack{
 static KERNEL_STACK: KernelStack = KernelStack {
     stack: [0; KERNEL_STACK_SIZE],
 };
-static USER_STACK: UserStack = UserStack {
+pub static USER_STACK: UserStack = UserStack {
     stack: [0; USER_STACK_SIZE],
 };
 
 impl UserStack{
-    fn get_sp(&self) -> usize{
+    pub fn get_sp(&self) -> usize{
         self.stack.as_ptr() as usize + USER_STACK_SIZE
     }
 }
@@ -47,7 +47,7 @@ impl KernelStack{
     }
 }
 
-pub struct AppManager{
+struct AppManager{
     num_app: usize,
     cur_app: usize,
     app_start: [usize;MAX_APPS+1],
