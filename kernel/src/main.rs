@@ -13,6 +13,8 @@ mod sync;
 pub mod syscall;
 pub mod timer;
 pub mod config;
+pub mod task;
+pub mod loader;
 
 #[macro_use]
 extern crate lazy_static;
@@ -61,7 +63,12 @@ fn simpl_os_main() -> ! {
     println!(".bss [{:#x}, {:#x})", sbss as usize, ebss as usize);
     println!("begin run some Apps here!");
     trap::init();
-    
+    loader::load_app();
+    trap::enable_timer_interrupt();
+    timer::set_next_trigger();
+    task::run_first_task();
+
+    panic!("Unreachable in rust_main!");
 
     #[cfg(feature = "qemu")]
     use crate::board::QEMUExit;

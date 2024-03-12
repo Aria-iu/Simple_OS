@@ -40,6 +40,10 @@ pub fn exit(exit_code: i32) -> isize{
     sys_exit(exit_code)
 }
 
-pub fn get_time(ts: *mut TimeVal,_tz: usize) -> isize{
-    sys_get_time(ts,_tz) as isize
+pub fn get_time() -> isize {
+    sys_get_time()
+}
+
+pub fn yield_() -> isize {
+    sys_yield()
 }
