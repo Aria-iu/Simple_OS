@@ -1,6 +1,7 @@
 #![no_std]
 #![no_main]
 #![feature(panic_info_message)]
+#![feature(alloc_error_handler)]
 
 #[macro_use]
 mod console;
@@ -15,6 +16,8 @@ pub mod timer;
 pub mod config;
 pub mod task;
 pub mod loader;
+extern crate alloc;
+pub mod mm;
 
 #[macro_use]
 extern crate lazy_static;
