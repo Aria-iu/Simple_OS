@@ -270,4 +270,4 @@ where
     }
 }
 
-type VPNRange = SimpleRange<VirtPageNum>;
+pub type VPNRange = SimpleRange<VirtPageNum>;

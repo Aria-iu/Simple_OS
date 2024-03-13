@@ -5,6 +5,14 @@ pub struct TrapContext{
     pub reg: [usize;32],
     pub sstatus: Sstatus,
     pub sepc: usize,
+    //  kernel_satp 表示内核地址空间的 token ，即内核页表的起始物理地址；
+    //  kernel_sp 表示当前应用在内核地址空间中的内核栈栈顶的虚拟地址；
+    //  trap_handler 表示内核中 trap handler 入口点的虚拟地址
+    //  它们在应用初始化的时候由内核写入应用地址空间中的 
+    //  TrapContext 的相应位置，此后就不再被修改
+    pub kernel_satp: usize,
+    pub kernel_sp: usize,
+    pub trap_handler: usize,
 }
 
 impl TrapContext{

@@ -9,3 +9,14 @@ pub use address::PhysAddr;
 pub use address::PhysPageNum;
 pub use frame_allocator::FrameTracker;
 pub use frame_allocator::frame_alloc;
+pub use address::VPNRange;
+pub use page_table::PageTable;
+pub use address::VirtAddr;
+
+
+pub use memory_set::KERNEL_SPACE;
+pub fn init(){
+    heap_allocator::init_heap();
+    frame_allocator::init_frame_allocator();
+    KERNEL_SPACE.exclusive_access().acticate();
+}

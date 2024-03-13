@@ -17,6 +17,7 @@ pub mod config;
 pub mod task;
 pub mod loader;
 extern crate alloc;
+extern crate xmas_elf;
 pub mod mm;
 
 #[macro_use]

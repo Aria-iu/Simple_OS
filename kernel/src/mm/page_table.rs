@@ -9,7 +9,7 @@
 /// 
 
 use bitflags::*;
-use super::address::VirtPageNum;
+use super::address::{StepByOne, VirtAddr, VirtPageNum};
 use super::{frame_alloc, FrameTracker, PhysPageNum};
 use alloc::vec::Vec;
 use alloc::vec;
@@ -63,7 +63,7 @@ impl PageTableEntry {
     }
 }
 
-/// page table structure
+/// 页表
 pub struct PageTable {
     root_ppn: PhysPageNum,
     frames: Vec<FrameTracker>,
@@ -77,6 +77,7 @@ impl PageTable{
             frames: vec![frame],
         }
     }
+    // 手动查页表
     pub fn from_token(satp: usize)->Self{
         Self{
             root_ppn: PhysPageNum::from(satp&((1usize<<44)-1)),
@@ -120,4 +121,46 @@ impl PageTable{
         result
     }
 
+    #[allow(unused)]
+    pub fn map(&mut self,vpn: VirtPageNum,ppn: PhysPageNum,flags: PTEFlags){
+        let pte = self.find_pte_create(vpn).unwrap();
+        assert!(!pte.is_valid(),"vpn {:?} is mapped before mapping",vpn);
+        *pte = PageTableEntry::new(ppn, flags | PTEFlags::V);
+    }
+
+    #[allow(unused)]
+    pub fn unmap(&mut self,vpn: VirtPageNum){
+        let pte = self.find_pte(vpn).unwrap();
+        assert!(pte.is_valid(),"vpn {:?} is invaild before mapping",vpn);
+        *pte = PageTableEntry::empty();
+    }
+
+    pub fn translate(&self, vpn: VirtPageNum) -> Option<PageTableEntry> {
+        self.find_pte(vpn).map(|pte| *pte)
+    }
+
+    pub fn token(&self) -> usize {
+        8usize << 60 | self.root_ppn.0
+    }
+}
+
+pub fn translate_byte_buffer(token: usize,ptr: *const u8,len: usize) -> Vec<&'static mut [u8]>{
+    let page_table = PageTable::from_token(token);
+    let mut start = ptr as usize;
+    let end = start+len;
+    let mut v: Vec<&mut [u8]> = Vec::new();
+    while start<end {
+        let start_va = VirtAddr::from(start);
+        let mut vpn = start_va.floor();
+        let ppn = page_table.translate(vpn).unwrap().ppn();
+        vpn.step();
+        let mut end_va: VirtAddr = vpn.into();
+        end_va = end_va.min(VirtAddr::from(end));
+        if end_va.page_offset() == 0 {
+            v.push(&mut ppn.get_bytes_array()[start_va.page_offset()..]);
+        }else {
+            v.push(&mut ppn.get_bytes_array()[start_va.page_offset()..end_va.page_offset()]);
+        }
+    }
+    v
 }
