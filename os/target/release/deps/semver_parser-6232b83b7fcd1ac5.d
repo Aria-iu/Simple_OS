@@ -1,0 +1,11 @@
+/home/zyc/rust_projects/Simple_Core/os/target/release/deps/libsemver_parser-6232b83b7fcd1ac5.rmeta: /home/zyc/.cargo/registry/src/mirrors.ustc.edu.cn-12df342d903acd47/semver-parser-0.7.0/src/lib.rs /home/zyc/.cargo/registry/src/mirrors.ustc.edu.cn-12df342d903acd47/semver-parser-0.7.0/src/version.rs /home/zyc/.cargo/registry/src/mirrors.ustc.edu.cn-12df342d903acd47/semver-parser-0.7.0/src/range.rs /home/zyc/.cargo/registry/src/mirrors.ustc.edu.cn-12df342d903acd47/semver-parser-0.7.0/src/common.rs /home/zyc/.cargo/registry/src/mirrors.ustc.edu.cn-12df342d903acd47/semver-parser-0.7.0/src/recognize.rs
+
+/home/zyc/rust_projects/Simple_Core/os/target/release/deps/libsemver_parser-6232b83b7fcd1ac5.rlib: /home/zyc/.cargo/registry/src/mirrors.ustc.edu.cn-12df342d903acd47/semver-parser-0.7.0/src/lib.rs /home/zyc/.cargo/registry/src/mirrors.ustc.edu.cn-12df342d903acd47/semver-parser-0.7.0/src/version.rs /home/zyc/.cargo/registry/src/mirrors.ustc.edu.cn-12df342d903acd47/semver-parser-0.7.0/src/range.rs /home/zyc/.cargo/registry/src/mirrors.ustc.edu.cn-12df342d903acd47/semver-parser-0.7.0/src/common.rs /home/zyc/.cargo/registry/src/mirrors.ustc.edu.cn-12df342d903acd47/semver-parser-0.7.0/src/recognize.rs
+
+/home/zyc/rust_projects/Simple_Core/os/target/release/deps/semver_parser-6232b83b7fcd1ac5.d: /home/zyc/.cargo/registry/src/mirrors.ustc.edu.cn-12df342d903acd47/semver-parser-0.7.0/src/lib.rs /home/zyc/.cargo/registry/src/mirrors.ustc.edu.cn-12df342d903acd47/semver-parser-0.7.0/src/version.rs /home/zyc/.cargo/registry/src/mirrors.ustc.edu.cn-12df342d903acd47/semver-parser-0.7.0/src/range.rs /home/zyc/.cargo/registry/src/mirrors.ustc.edu.cn-12df342d903acd47/semver-parser-0.7.0/src/common.rs /home/zyc/.cargo/registry/src/mirrors.ustc.edu.cn-12df342d903acd47/semver-parser-0.7.0/src/recognize.rs
+
+/home/zyc/.cargo/registry/src/mirrors.ustc.edu.cn-12df342d903acd47/semver-parser-0.7.0/src/lib.rs:
+/home/zyc/.cargo/registry/src/mirrors.ustc.edu.cn-12df342d903acd47/semver-parser-0.7.0/src/version.rs:
+/home/zyc/.cargo/registry/src/mirrors.ustc.edu.cn-12df342d903acd47/semver-parser-0.7.0/src/range.rs:
+/home/zyc/.cargo/registry/src/mirrors.ustc.edu.cn-12df342d903acd47/semver-parser-0.7.0/src/common.rs:
+/home/zyc/.cargo/registry/src/mirrors.ustc.edu.cn-12df342d903acd47/semver-parser-0.7.0/src/recognize.rs:
