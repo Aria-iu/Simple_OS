@@ -13,6 +13,12 @@ pub const PAGE_SIZE_BITS: usize = 0xc;
 pub const TRAMPOLINE: usize = usize::MAX - PAGE_SIZE + 1;
 pub const TRAP_CONTEXT: usize = TRAMPOLINE - PAGE_SIZE;
 
+pub fn kernel_stack_position(app_id:usize)->(usize,usize){
+    let top = TRAMPOLINE - app_id*(KERNEL_STACK_SIZE+PAGE_SIZE);
+    let bottom = top - KERNEL_STACK_SIZE;
+    (bottom,top)
+}
+
 #[cfg(feature="qemu")]
 pub const MMIO: &[(usize, usize)] = &[
     (0x0010_0000, 0x00_2000), // VIRT_TEST/RTC  in virt machine

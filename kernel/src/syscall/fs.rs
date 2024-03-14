@@ -1,3 +1,5 @@
+use crate::task::current_user_token;
+use crate::mm::translate_byte_buffer;
 const FD_STDOUT: usize = 1;
 
 // use crate::batch::USER_STACK;
@@ -22,11 +24,19 @@ pub fn sys_write(fd: usize,buf: *const u8,len: usize) -> isize{
                 -1 as isize
             }
             */
+            /* 
             let slice = unsafe { core::slice::from_raw_parts(buf, len) };
             let str = core::str::from_utf8(slice).unwrap();
             print!("{}", str);
             len as isize
-
+            */
+            // 由于内核和应用地址空间的隔离，sys_write 不再能够直接访问位于应用空间中的
+            // 数据，而需要手动查页表才能知道那些数据被放置在哪些物理页帧上并进行访问。
+            let buffers = translate_byte_buffer(current_user_token(),buf,len);
+            for buffer in buffers{
+                println!("{}",core::str::from_utf8(buffer).unwrap());
+            }
+            len as isize
         },
         _ =>{
             -1 as isize

@@ -19,7 +19,7 @@ _app_names:
     .global app_0_end
     .align 3
 app_0_start:
-    .incbin "../apps/target/riscv64gc-unknown-none-elf/release/00power_3.bin"
+    .incbin "../apps/target/riscv64gc-unknown-none-elf/release/00power_3"
 app_0_end:
             
     .section .data
@@ -27,7 +27,7 @@ app_0_end:
     .global app_1_end
     .align 3
 app_1_start:
-    .incbin "../apps/target/riscv64gc-unknown-none-elf/release/01power_5.bin"
+    .incbin "../apps/target/riscv64gc-unknown-none-elf/release/01power_5"
 app_1_end:
             
     .section .data
@@ -35,7 +35,7 @@ app_1_end:
     .global app_2_end
     .align 3
 app_2_start:
-    .incbin "../apps/target/riscv64gc-unknown-none-elf/release/02power_7.bin"
+    .incbin "../apps/target/riscv64gc-unknown-none-elf/release/02power_7"
 app_2_end:
             
     .section .data
@@ -43,6 +43,6 @@ app_2_end:
     .global app_3_end
     .align 3
 app_3_start:
-    .incbin "../apps/target/riscv64gc-unknown-none-elf/release/03sleep.bin"
+    .incbin "../apps/target/riscv64gc-unknown-none-elf/release/03sleep"
 app_3_end:
             

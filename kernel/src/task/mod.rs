@@ -4,12 +4,13 @@ mod switch;
 #[allow(clippy::module_inception)]
 mod task;
 
-use crate::config::MAX_APP_NUM;
-use crate::loader::{get_num_app, init_app_cx};
+use crate::loader::{get_app_data, get_num_app};
 use crate::sync::UPSafeCell;
+use crate::trap::TrapContext;
 use self::switch::__switch;
 use self::task::{TaskControlBlock,TaskStatus};
 use crate::sbi::shut_down;
+use alloc::vec::Vec;
 pub use context::TaskContext;
 
 pub struct TaskManager{
@@ -18,29 +19,34 @@ pub struct TaskManager{
 }
 
 struct TaskManagerInner{
-    tasks:[TaskControlBlock;MAX_APP_NUM],
+    tasks:Vec<TaskControlBlock>,
     cur_task: usize,
 }
-
+/*
+    在 TaskManagerInner 中 我 们 使 用 向 量 Vec 
+    来 保 存 任 务 控 制 块。 在 全 局 任 务 管 理 器
+    TASK_MANAGER 初始化的时候，
+    只需使用 loader 子模块提供的 get_num_app 和 get_app_data 分
+    别获取链接到内核的应用数量和每个应用的 ELF 文件格式的数据，
+    然后依次给每个应用创建任务控制块并加入到向量中即可
+*/
 lazy_static!{
     pub static ref TASK_MANAGER:TaskManager = {
+        println!("init TASK_MANAGER");
         let num_app = get_num_app();
-        let mut tasks = [
-            TaskControlBlock{
-                taskstatus: TaskStatus::UnInit,
-                taskcontext: TaskContext::zero_init(),
-            }
-            ;MAX_APP_NUM];
-        for (i,task) in tasks.iter_mut().enumerate(){
-            task.taskcontext = TaskContext::goto_restore(init_app_cx(i));
-            task.taskstatus = TaskStatus::Ready;
+        println!("num_app is {}",num_app);
+        let mut tasks: Vec<TaskControlBlock> = Vec::new();
+        for i in 0..num_app{
+            tasks.push(
+                TaskControlBlock::new(get_app_data(i), i)
+            )
         }
         TaskManager{
             num_app,
-            inner: unsafe {
+            inner:  unsafe {
                 UPSafeCell::new(TaskManagerInner{
                     tasks,
-                    cur_task:0,
+                    cur_task:0, 
                 })
             }
         }
@@ -48,6 +54,18 @@ lazy_static!{
 }
 
 impl TaskManager{
+    fn get_curren_token(&self) -> usize{
+        let inner = self.inner.exclusive_access();
+        let current = inner.cur_task;
+        inner.tasks[current].get_user_token()
+    }
+    
+    fn get_current_trap_cx(&self) -> &mut TrapContext{
+        let inner = self.inner.exclusive_access();
+        let current = inner.cur_task;
+        inner.tasks[current].get_trap_cx()
+    }
+
     fn run_first_task(&self){
         let mut inner = self.inner.exclusive_access();
         let task0 = &mut inner.tasks[0];
@@ -83,6 +101,12 @@ impl TaskManager{
         .find(|id| inner.tasks[*id].taskstatus == TaskStatus::Ready)
     }
 
+    pub fn change_current_program_brk(&self,size: i32) -> Option<usize>{
+        let mut inner = self.inner.exclusive_access();
+        let cur = inner.cur_task;
+        inner.tasks[cur].change_program_brk(size)
+    }
+
     fn run_next_task(&self){
         if let Some(next) = self.find_next_task(){
             let mut inner = self.inner.exclusive_access();
@@ -103,7 +127,17 @@ impl TaskManager{
     }
 
 }
+// 通过 current_user_token 和 current_trap_cx 
+// 分别可以获得当前正在执行的应用的地址空间的 token
+// 和可以在内核地址空间中修改位于该应用地址空间中的 Trap 上下文的可变引用。
+pub fn current_user_token() -> usize{
+    TASK_MANAGER.get_curren_token()
+}
 
+pub fn current_trap_cx() -> &'static mut TrapContext{
+    TASK_MANAGER.get_current_trap_cx()
+}
+ 
 /// run first task
 pub fn run_first_task() {
     TASK_MANAGER.run_first_task();
@@ -135,4 +169,8 @@ pub fn suspend_current_and_run_next() {
 pub fn exit_current_and_run_next() {
     mark_current_exited();
     run_next_task();
+}
+
+pub fn change_program_brk(size: i32) -> Option<usize>{
+    TASK_MANAGER.change_current_program_brk(size)
 }

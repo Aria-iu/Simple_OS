@@ -12,7 +12,10 @@ pub use frame_allocator::frame_alloc;
 pub use address::VPNRange;
 pub use page_table::PageTable;
 pub use address::VirtAddr;
-
+pub use memory_set::MemorySet;
+pub use memory_set::MapPermission;
+pub use page_table::translate_byte_buffer;
+pub use memory_set::remap_test;
 
 pub use memory_set::KERNEL_SPACE;
 pub fn init(){

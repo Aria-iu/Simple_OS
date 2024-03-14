@@ -65,13 +65,17 @@ fn simpl_os_main() -> ! {
         boot_stack as usize, boot_stack_top as usize
     );
     println!(".bss [{:#x}, {:#x})", sbss as usize, ebss as usize);
-    println!("begin run some Apps here!");
+    
+    println!("[kernel] Hello, world!");
+    mm::init();
+    println!("[kernel] back to world!");
+    mm::remap_test();
     trap::init();
-    loader::load_app();
+    //loader::load_app();
     trap::enable_timer_interrupt();
     timer::set_next_trigger();
+    println!("begin run some Apps here!");
     task::run_first_task();
-
     panic!("Unreachable in rust_main!");
 
     #[cfg(feature = "qemu")]
