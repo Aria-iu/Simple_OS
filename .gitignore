@@ -1,2 +1,2 @@
-./kernel/target/
-./apps/target/
+./os/target/
+./user/target/
