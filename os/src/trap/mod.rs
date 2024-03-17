@@ -27,7 +27,6 @@ use riscv::register::{
 };
 
 global_asm!(include_str!("trap.S"));
-
 /// initialize CSR `stvec` as the entry of `__alltraps`
 pub fn init() {
     set_kernel_trap_entry();
@@ -44,7 +43,6 @@ fn set_user_trap_entry() {
         stvec::write(TRAMPOLINE as usize, TrapMode::Direct);
     }
 }
-
 /// enable timer interrupt in sie CSR
 pub fn enable_timer_interrupt() {
     unsafe {
@@ -56,21 +54,16 @@ pub fn enable_timer_interrupt() {
 /// handle an interrupt, exception, or system call from user space
 pub fn trap_handler() -> ! {
     set_kernel_trap_entry();
-    // let cx = current_trap_cx();
     let scause = scause::read();
     let stval = stval::read();
     match scause.cause() {
         Trap::Exception(Exception::UserEnvCall) => {
-            /*
-            对于系统调用 sys_exec 来说，一旦调用它之后，我们会发现
-            trap_handler 原来上下文中的 cx 失效了——因为它是用来访问
-            之前地址空间中 Trap 上下文被保存在的
-            那个物理页帧的，而现在它已经被回收掉了。
-                        */
             // jump to next instruction anyway
             let mut cx = current_trap_cx();
             cx.sepc += 4;
-            let result = syscall(cx.x[17], [cx.x[10], cx.x[11], cx.x[12]]) as usize;
+            // get system call return value
+            let result = syscall(cx.x[17], [cx.x[10], cx.x[11], cx.x[12]]);
+            // cx is changed during sys_exec, so we have to call it again
             cx = current_trap_cx();
             cx.x[10] = result as usize;
         }
@@ -106,6 +99,7 @@ pub fn trap_handler() -> ! {
             );
         }
     }
+    //println!("before trap_return");
     trap_return();
 }
 
@@ -125,10 +119,10 @@ pub fn trap_return() -> ! {
     unsafe {
         asm!(
             "fence.i",
-            "jr {restore_va}",             // jump to new addr of __restore asm function
+            "jr {restore_va}",
             restore_va = in(reg) restore_va,
-            in("a0") trap_cx_ptr,      // a0 = virt addr of Trap Context
-            in("a1") user_satp,        // a1 = phy addr of usr page table
+            in("a0") trap_cx_ptr,
+            in("a1") user_satp,
             options(noreturn)
         );
     }
@@ -138,6 +132,8 @@ pub fn trap_return() -> ! {
 /// Unimplement: traps/interrupts/exceptions from kernel mode
 /// Todo: Chapter 9: I/O device
 pub fn trap_from_kernel() -> ! {
+    use riscv::register::sepc;
+    println!("stval = {:#x}, sepc = {:#x}", stval::read(), sepc::read());
     panic!("a trap {:?} from kernel!", scause::read().cause());
 }
 

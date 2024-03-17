@@ -1,4 +1,5 @@
 //! SBI call wrappers
+#![allow(unused)]
 
 /// use sbi call to putchar in console (qemu uart handler)
 pub fn console_putchar(c: usize) {
@@ -11,6 +12,7 @@ pub fn console_getchar() -> usize {
     #[allow(deprecated)]
     sbi_rt::legacy::console_getchar()
 }
+
 /// use sbi call to set timer
 pub fn set_timer(timer: usize) {
     sbi_rt::set_timer(timer as _);
